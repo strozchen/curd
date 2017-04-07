@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd">
+
+	<mvc:default-servlet-handler/>
+	<context:component-scan base-package="com.stroz.util"></context:component-scan>
+	<context:component-scan base-package="com.stroz.entity"></context:component-scan>
+	<context:component-scan base-package="com.stroz.DAO"></context:component-scan>
+	<context:component-scan base-package="com.stroz.error"></context:component-scan>
+	<mvc:annotation-driven></mvc:annotation-driven>	
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/"></property>
+		<property name="suffix" value=".jsp"></property>
+	</bean>
+	<!-- 
+	<aop:aspectj-autoproxy proxy-target-class="true"/>
+	<bean id="aspectAction" class="com.stroz.aspectJ.AspectAction"></bean>
+	 -->
+	<!-- 配置国际化资源文件 -->
+	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basename" value="i18n"></property>
+	</bean>
+	<!-- 配置超链接切换语言 -->
+	<bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver"></bean>
+	<mvc:interceptors>
+	<!-- 配置自定义拦截器 -->
+		<bean class="com.stroz.interceptor.FirstInterceptor"></bean>
+		<mvc:interceptor>
+			<mvc:mapping path="/curd/userlist"/>
+			<bean class="com.stroz.interceptor.SecondInterceptor"></bean>
+		</mvc:interceptor>
+	<!-- 配置LocalChanceInterceptor -->
+		<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor"></bean>
+	</mvc:interceptors>
+	
+	<!-- 
+	<mvc:view-controller path="i18n" view-name="i18n"/>
+	 -->
+	<mvc:view-controller path="view/i18n2" />
+	
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="defaultEncoding" value="UTF-8"></property>
+		<property name="maxUploadSize" value="1024000"></property>
+	</bean>
+</beans>
